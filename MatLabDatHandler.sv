@@ -1,13 +1,15 @@
 package MatLabDatHandler;
 
     typedef struct{shortint I, Q;} IQPair;
+    typedef struct{longint I, Q;} WeightPair;
 
     function int OpenFile(string filePath, string mode="r");
 		int res;
     
-		//$display($sformatf("Opening file: %s",filePath));
+		$display($sformatf("Opening file: %s",filePath));
 		
 		res =  $fopen(filePath,mode);
+		//$display($sformatf("Opening file descriptor: %d",res));
 		
 		if (mode=="w") begin
 		  $fclose(res);
@@ -21,6 +23,7 @@ package MatLabDatHandler;
     function IQPair ReadIQSamples(int fileDescriptor);
         IQPair IQResult;
         int res;
+		//$display($sformatf("Opening file descriptor: %d",fileDescriptor));
         
         res = $fscanf(fileDescriptor, "%d, %d", IQResult.I, IQResult.Q);
         return IQResult;
@@ -39,9 +42,16 @@ package MatLabDatHandler;
         $sformat(data, "%d, %d", iqPair.I, iqPair.Q);
         $fdisplay(fileDescriptor, data);
     endfunction
+
+    function void WriteWeightSamples(int fileDescriptor, WeightPair weightPair);
+        int res;
+        string data;
+        $sformat(data,"%d, %d", weightPair.I, weightPair.Q);
+        $fdisplay(fileDescriptor, data);
+    endfunction
     
     function void CloseFile(int fileDescriptor);
-		//$display($sformatf("Closing file %d...", fileDescriptor));
+		$display($sformatf("Closing file id: %d", fileDescriptor));
         $fclose(fileDescriptor);
     endfunction
     
